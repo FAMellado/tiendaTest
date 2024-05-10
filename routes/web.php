@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
+ 
 // DashMix Example Routes
 Route::view('/', 'landing');
 Route::match(['get', 'post'], '/dashboard', function(){
@@ -30,4 +31,12 @@ Route::match(['get', 'post'], '/dashboard', function(){
 Route::view('/pages/slick', 'pages.slick');
 Route::view('/pages/datatables', 'pages.datatables');
 Route::view('/pages/blank', 'pages.blank');
+
+// Usando el espacio de nombres completo para PageController
+Route::get('/index', [PageController::class, 'index']);
+Route::get('/about', [PageController::class, 'about']);
+Route::get('/contact', [PageController::class, 'contact']);
+Route::get('/service', [PageController::class, 'service']);
+Route::get('/team', [PageController::class, 'team']);
+Route::get('/testimonial', [PageController::class, 'testimonial']);
 
