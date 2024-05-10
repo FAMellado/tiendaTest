@@ -40,6 +40,6 @@ class LoginController extends Controller
     }
     protected function loggedOut(Request $request)
     {
-        return redirect('/index'); // Redirect to the desired route after logout
+        return redirect('/'); // Redirect to the desired route after logout
     }
 }
