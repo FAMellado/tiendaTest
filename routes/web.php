@@ -13,13 +13,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WebpayController;
+use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\CotizacionController;
 
-/* Route::group(['middleware' => ['role:Admin|Moderador']], function(){
- */
-
-
-/* }
-); */
 //Permisos y Roles
 Route::resource('permissions', App\Http\Controllers\PermisionController::class);
 Route::get('permissions/{permissionId}/delete', [App\Http\Controllers\PermisionController::class, 'destroy']);
@@ -83,10 +79,22 @@ Route::get('/shop/product/{id}', [ProductController::class, 'show'])->name('shop
 Route::get('/shop/{category?}', [ShopController::class, 'index'])->name('shop.index');
 
 
+//Direccion
+Route::post('/address/store', [AddressController::class, 'store'])->name('address.store');
+
+// Galeria de imagenes
+Route::get('/gallery', [PhotoController::class, 'index'])->name('gallery.index');
+Route::get('/gallery/create', [PhotoController::class, 'create'])->name('gallery.create');
+Route::post('/gallery', [PhotoController::class, 'store'])->name('gallery.store');
+Route::delete('/gallery/{photo}', [PhotoController::class, 'destroy'])->name('gallery.destroy');
+
+Route::get('/dashboard/gallery', [PhotoController::class, 'dashboardIndex'])->name('dashboard.gallery.index');
 
 // Lista de Deseos
 
 Route::get('wishlist', [ProductController::class, 'wishlist'])->name('wishlist');
+Route::post('/wishlist/add/{productId}', [ProductController::class, 'addToWishlist'])->name('wishlist.add');
+Route::delete('/wishlist/remove/{id}', [ProductController::class, 'removeFromWishlist'])->name('wishlist.remove');
 
 
 Route::resource('addresses', AddressController::class);
@@ -98,35 +106,15 @@ Route::get('/api/vehicles/years', [VehicleController::class, 'getYears']);
 Route::get('/api/vehicles/brands', [VehicleController::class, 'getBrands']);
 Route::get('/api/vehicles/models', [VehicleController::class, 'getModels']);
 
-// DerrylDecode Cart
+// Rutas del carrito
 
-// *TEST* PORQUE MARCA CADA INSTANCIA DE \CART COMO INDEFINIDA PERO REALMENTE SI FUNCIONA
-/* Route::get('/test-cart', function () {
-    \Cart::add([
-        'id' => 1,
-        'name' => 'Test Product',
-        'price' => 1001,
-        'quantity' => 1,
-        'attributes' => []
-    ]);
-
-    return \Cart::getContent();
-}); */
-
-/* test ajax */
-
-Route::get('/test-ajax', function () {
-    return response()->json(['message' => 'AJAX is working!']);
-});
-
-
-Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/index', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-
-
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add'); // Esta es la ruta que falta
+Route::get('/cart', [CartController::class, 'show'])->name('cart.show');
+Route::get('/cart/preorder', [CartController::class, 'showPreOrder'])->name('cart.showPreOrder');
+Route::get('/cart/preorder/purchase', [CartController::class, 'purchase'])->name('cart.purchase');
 
 
 // WEB PAY
@@ -134,6 +122,12 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 Route::get('/webpay/init', [WebpayController::class, 'initTransaction'])->name('webpay.init');
 Route::match(['get', 'post'], '/webpay/response', [WebpayController::class, 'response'])->name('webpay.response');
 Route::get('/webpay/finish', [WebpayController::class, 'finish'])->name('webpay.finish');
+Route::resource('profile', App\Http\Controllers\UserController::class);
+
+// cotizaciones
+
+Route::get('views/cotizaciones', [CotizacionController::class, 'create'])->name('cotizaciones.form');
+Route::post('views/cotizaciones', [CotizacionController::class, 'store'])->name('cotizaciones.store');
 
 
 Route::get('/xd', function () {

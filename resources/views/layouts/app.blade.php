@@ -11,6 +11,8 @@
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rubik&display=swap" rel="stylesheet">
@@ -59,6 +61,7 @@
     </div>
     <!-- Topbar End -->
 
+    @include('layouts.search')
 
     <!-- Navbar Start -->
     <div class="container-fluid position-relative nav-bar p-0">
@@ -75,18 +78,21 @@
                         <a href='/' class="nav-item nav-link">Inicio</a>
 
                         <a href="{{ route('shop.index') }}" class="nav-item nav-link">Tienda</a>
-                        <a href="service" class="nav-item nav-link">Servicios</a>
+                        <a href="{{ route('gallery.index') }}" class="nav-item nav-link">Galeria</a>
 
                         {{-- Menu usuario registrado/noRegistrado --}}
-                        <div class="nav-item dropdown">
+                        <!-- <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Páginas</a>
                             <div class="dropdown-menu rounded-0 m-0">
                                 <a href="team" class="dropdown-item">Equipo</a>
                                 <a href="testimonial" class="dropdown-item">Testimonio</a>
                                 <a href="about" class="dropdown-item">Sobre nosotros</a>
                             </div>
-                        </div>
+                        </div> -->
                         <a href="contact" class="nav-item nav-link">Contacto</a>
+                            
+
+                        <a class="nav-item nav-link" href="{{ route('cotizaciones.form') }}">Cotizaciones</a>
 
 
                         {{-- Dropdown de admin --}}
@@ -122,6 +128,11 @@
                         @endif
                         @endauth
 
+                        <!-- Search Filter Icon -->
+                        <a href="#" class="nav-item nav-link" data-toggle="modal" data-target="#searchFilterModal">
+                            <i class="fa fa-car"></i>
+                        </a>
+
                         <!-- Cart Icon -->
                         <a href="#" class="nav-item nav-link" data-toggle="modal" data-target="#cartModal">
                             <i class="fa fa-shopping-cart"></i>
@@ -135,7 +146,7 @@
 
     @include('layouts.cart')
 
-    
+
 
     <main class="py-4">
         @yield('content')
@@ -276,6 +287,7 @@
                 e.preventDefault();
                 var id = $(this).data('id');
                 updateQuantity(id, 'increase');
+                updateCartModal(cart);
             });
 
             // Decrease quantity button click handler
@@ -283,6 +295,7 @@
                 e.preventDefault();
                 var id = $(this).data('id');
                 updateQuantity(id, 'decrease');
+                updateCartModal(cart);
             });
 
             // Function to update quantity
@@ -310,6 +323,7 @@
             }
 
         });
+            
     </script>
 
 

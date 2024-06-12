@@ -409,12 +409,25 @@
                   </a>
                 </li>
                 <li class="nav-main-item">
-                  <a class="nav-main-link" href="#">
+                  <a class="nav-main-link{{ request()->is('orders') ? ' active' : '' }}" ">
                     <i class="nav-main-link-icon fa fa-shopping-cart"></i>
-                    <span class="nav-main-link-name">Pedidos</span>
+                    <span class="nav-main-link-name unactive">Pedidos</span>
                   </a>
                 </li>
               </ul>
+            </li>
+            <li class="nav-main-heading">Galeria de Imagenes</li>
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->is('gallery-create') ? ' active' : '' }}" href="{{url('gallery/create')}}">
+                <i class="nav-main-link-icon fa fa-credit-card"></i>
+                <span class="nav-main-link-name">Ingresar una imagen</span>
+              </a>
+            </li>
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->is('gallery-show') ? ' active' : '' }}" href="{{url('gallery/show')}}">
+                <i class="nav-main-link-icon fa fa-credit-card"></i>
+                <span class="nav-main-link-name">Ver las imagenes</span>
+              </a>
             </li>
             <li class="nav-main-heading">Módulo de Ventas</li>
             <li class="nav-main-item">
@@ -645,10 +658,10 @@
       <div class="content py-0">
         <div class="row fs-sm">
           <div class="col-sm-6 order-sm-2 mb-1 mb-sm-0 text-center text-sm-end">
-            Crafted with <i class="fa fa-heart text-danger"></i> by <a class="fw-semibold" href="https://1.envato.market/ydb" target="_blank">pixelcave</a>
+            Crafted with <i class="fa fa-heart text-danger"></i> by <a class="fw-semibold" href="#" target="_blank">Team NeumaConce</a>
           </div>
           <div class="col-sm-6 order-sm-1 text-center text-sm-start">
-            <a class="fw-semibold" href="https://1.envato.market/r6y" target="_blank">Dashmix</a> &copy;
+            <a class="fw-semibold" href="#" target="_blank">NeumaConce</a> &copy;
             <span data-toggle="year-copy"></span>
           </div>
         </div>

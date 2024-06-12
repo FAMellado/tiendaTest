@@ -1,5 +1,6 @@
-<div id="cartModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<!-- Carrito de Compras (modal) -->
+<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="cartModalLabel">Carrito de Compras</h5>
@@ -33,7 +34,7 @@
                                 <td>${{ $item->price }}</td>
                                 <td>
                                     <button class="btn btn-secondary btn-sm decrease-quantity" data-id="{{ $item->id }}">-</button>
-                                    <span>{{ $item->quantity }}</span>
+                                    <span class="quantity" data-id="{{ $item->id }}">{{ $item->quantity }}</span>
                                     <button class="btn btn-secondary btn-sm increase-quantity" data-id="{{ $item->id }}">+</button>
                                 </td>
                                 <td>
@@ -57,3 +58,4 @@
         </div>
     </div>
 </div>
+
