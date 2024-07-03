@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -7,27 +8,32 @@ use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class WebpayController extends Controller
 {
-    public function initTransaction()
+    public function initTransaction(Request $request)
     {
-        $buyOrder = 'ordenCompra' . rand(1000, 9999);
+        // Obtener el último número de orden emitido
+        $lastOrder = Order::orderBy('id', 'desc')->first();
+        $buyOrder = $lastOrder ? $lastOrder->id + 1 : 1;
+
         $sessionId = session()->getId();
         $amount = round(Cart::getTotal());
         $returnUrl = route('webpay.response');
 
-        // Save the preliminary order
+        // Crear la nueva orden con el número de orden secuencial
         $order = Order::create([
             'user_id' => Auth::id(),
             'total' => $amount,
+            'address_id' => $request->address_id,
+            'delivery_type' => $request->delivery_type ?? 1,
         ]);
 
         $transaction = new Transaction();
         $response = $transaction->create($buyOrder, $sessionId, $amount, $returnUrl);
 
         if ($response->getToken() && $response->getUrl()) {
-            // Save the order ID and token to session
             session(['order_id' => $order->id, 'webpay_token' => $response->getToken()]);
 
             return view('webpay.redirect', [
@@ -54,14 +60,15 @@ class WebpayController extends Controller
             $order = Order::find(session('order_id'));
 
             if ($order) {
-                // Update the order with payment details
                 $order->update([
                     'payment_method_id' => 1, // Assuming 1 is the WebPay payment method ID
                     'transactionID' => $response->getAuthorizationCode(),
-                    'address_id' => session('address_id'), // Assume address_id is stored in session
+                    //'address_id' => session('address_id'), // Assume address_id is stored in session
+                    'status' => 'EN ESPERA',
+                    'buy_order' => $response->getBuyOrder(), // Guardar Orden de Compra
+                    'authorization_code' => $response->getAuthorizationCode(), // Guardar Código de Autorización
                 ]);
 
-                // Add order items
                 $cartItems = Cart::getContent();
                 foreach ($cartItems as $item) {
                     $order->items()->create([
@@ -71,11 +78,10 @@ class WebpayController extends Controller
                     ]);
                 }
 
-                // Clear the cart
                 Cart::clear();
             }
 
-            return view('webpay.success', ['result' => $response]);
+            return view('webpay.success', ['result' => $response, 'order' => $order]);
         }
 
         return view('webpay.failure', ['result' => $response]);
@@ -84,5 +90,13 @@ class WebpayController extends Controller
     public function finish()
     {
         return view('webpay.finish');
+    }
+
+    public function downloadInvoice($orderId)
+    {
+        $order = Order::with('items.product')->findOrFail($orderId);
+
+        $pdf = Pdf::loadView('webpay.receipt', compact('order'));
+        return $pdf->download('receipt_' . $order->id . '.pdf');
     }
 }
