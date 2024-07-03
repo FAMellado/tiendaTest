@@ -145,9 +145,9 @@ Route::post('/products/{id}/promote', [ProductController::class, 'promote'])->na
 
 // Lista de Deseos
 
-Route::get('wishlist', [ShopController::class, 'wishlist'])->name('wishlist');
-Route::post('/wishlist/add/{productId}', [ShopController::class, 'addToWishlist'])->name('wishlist.add');
-Route::delete('/wishlist/remove/{id}', [ShopController::class, 'removeFromWishlist'])->name('wishlist.remove');
+Route::get('wishlist', [ProductController::class, 'wishlist'])->name('wishlist');
+Route::post('/wishlist/add/{productId}', [ProductController::class, 'addToWishlist'])->name('wishlist.add');
+Route::delete('/wishlist/remove/{id}', [ProductController::class, 'removeFromWishlist'])->name('wishlist.remove');
 
 //Direcciones
 Route::resource('addresses', AddressController::class);
